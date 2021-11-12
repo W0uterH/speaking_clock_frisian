@@ -1,0 +1,143 @@
+from google.colab import drive
+drive.mount("/content/drive")
+
+from scipy.io.wavfile import read, write
+import numpy as np
+import IPython
+from IPython.display import Audio, display 
+import librosa
+import librosa.display
+import soundfile as sf
+
+def return_time(): #make the users input the basis for the speaking clock. The user of the speaking clock gives the time as input and the speaking clock will output the right audiofiles
+  time= input("what is the time? for example '01:15'")
+  return time
+  
+def take_hours(text): #I want to return the audiofile that corresponds to the first 2 digits, thereby giving the time in hours
+  if text in ["01","13"] and text !="00":
+    audiofile2 = "/content/ienen.mp3"
+
+  elif text in ["02","14"] and text !="00":
+    audiofile2 = "/content/twaen.mp3"
+
+  elif text in ["03","15"] and text !="00":
+    audiofile2 = "/content/trijen.mp3"
+
+  elif text in ["04","16"] and text !="00":
+    audiofile2 = "/content/fjouweren.mp3"
+
+  elif text in ["05","17"] and text !="00":
+    audiofile2 = "/content/fiiven.mp3"
+
+  elif text in ["06","18"] and text !="00":
+    audiofile2 = "/content/seizen.mp3"
+
+  elif text in ["07","19"] and text !="00":
+    audiofile2 = "/content/sanen.mp3"
+
+  elif text in ["08","20"] and text !="00":
+    audiofile2 = "/content/achten.mp3"
+  
+  elif text in ["09","21"] and text !="00":
+    audiofile2 = "/content/njoggenen.mp3"
+
+  elif text in ["10","22"] and text !="00":
+    audiofile2 = "/content/tsienen.mp3"
+
+  elif text in ["11","23"] and text !="00":
+    audiofile2 = "/content/olven.mp3"
+
+  elif text in ["12","24"] and text !="00":
+    audiofile2 = "/content/tolven.mp3"
+
+  return audiofile2
+
+def take_minutes(text): #I want to return the audiofile that corresponds to the last 2 digits, thereby giving the time in minutes
+  if text == "15": 
+    audiofile = "/content/ketieroer.mp3"
+
+  elif text == "30":
+    audiofile = "/content/healwei.mp3"
+
+  elif text == "45":
+    audiofile = "/content/ketierfoar.mp3"
+  return audiofile
+
+#Only a quarter past, half past, and a quarter two were done so that less speech files are needed, making the process easier to manage
+
+def take_whole_hours(text): #When the time is at the round hour, only one audiofile is used. Thi function tests whether the time is at the round hour.
+  if text[:2] in ["01", "13"] and text[-2:] == "00":
+    audiofile3 = "/content/ien.mp3"
+
+  if text[:2] in ["02", "14"] and text[-2:] == "00":
+    audiofile3 = "/content/twa.mp3"
+
+  if text[:2] in ["03", "15"] and text[-2:] == "00":
+    audiofile3 = "/content/trije.mp3"
+
+  if text[:2] in ["04", "16"] and text[-2:] == "00":
+    audiofile3 = "/content/fjouwer.mp3"
+
+  if text[:2] in ["05", "17"] and text[-2:] == "00":
+    audiofile3 = "/content/fiif.mp3"
+
+  if text[:2] in ["06", "18"] and text[-2:] == "00":
+    audiofile3 = "/content/seis.mp3"
+
+  if text[:2] in ["07", "19"] and text[-2:] == "00":
+    audiofile3 = "/content/san.mp3"
+
+  if text[:2] in ["08", "20"] and text[-2:] == "00":
+    audiofile3 = "/content/acht.mp3"
+
+  if text[:2] in ["09", "21"] and text[-2:] == "00":
+    audiofile3 = "/content/njoggen.mp3"
+
+  if text[:2] in ["10", "22"] and text[-2:] == "00":
+    audiofile3 = "/content/tsien.mp3"
+
+  if text[:2] in ["11", "23"] and text[-2:] == "00":
+    audiofile3 = "/content/olven.mp3"
+
+  if text[:2] in ["12", "00"] and text[-2:] == "00":
+    audiofile3 = "/content/tolven.mp3"
+    
+  return audiofile3
+
+def what_time(): #concatenating the different files together
+  start = "/content/tis.mp3"
+  sr = 22000
+  time_audio = [10]   
+  time = return_time()
+  # sr, data = read(start)
+  if time[-2:] == "00":
+    # audiofile3 = take_whole_hours(time)
+    # sr1, audio1 = sf.read(audiofile3)
+    # print(audiofile3)
+    # sr2, audio2 = sf.read(start)
+    # time_audio = np.concatenate((audio2,audio1)) #for the round hours, audio 2 'it is' (frisian) is concatenated with the '__ O'clock' audiofile
+    audiofile3 = take_whole_hours(time)
+    audio1,sr1 = librosa.load(audiofile3)
+    print(audiofile3)
+    audio2,sr2 = librosa.load(start)
+    time_audio = np.concatenate((audio2,audio1))
+    print(time_audio)
+    # IPython.display.Audio(data=time_audio, rate=sr)
+
+  else:
+    audiofile = take_minutes(time[-2:])
+    audio3, sr3 = librosa.load(audiofile)
+    audiofile2 = take_hours(time[:2])
+    audio4, sr4 = librosa.load(audiofile2)
+    audio2, sr2 = librosa.load(start)
+    time_audio = np.concatenate((audio2,audio3,audio4)) #for the specific time, we have 3 audiofiles, 'it is' + minutes + hours (in frisian)
+    print(time_audio)
+  # IPython.core.display.display(IPython.display.Audio(time_audio, rate=sr, autoplay=True))
+  # (Audio(time_audio,rate=sr))
+  # IPython.display.Audio(data=time_audio, rate=sr)
+  display(Audio(time_audio, rate=sr, autoplay=True))
+
+
+
+what_time()
+
